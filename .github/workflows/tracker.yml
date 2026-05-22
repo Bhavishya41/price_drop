@@ -37,4 +37,4 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add last_price.txt
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Update last tracked price" && git push)
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Update last tracked price" && git push origin master)
