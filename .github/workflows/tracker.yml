@@ -12,6 +12,8 @@ permissions:
 jobs:
   run-tracker:
     runs-on: ubuntu-latest
+    # ... (Keep the top triggers and configuration fields exactly the same)
+
     steps:
       - name: Checkout repository code
         uses: actions/checkout@v4
@@ -25,16 +27,24 @@ jobs:
         run: |
           pip install requests
 
-      - name: Run script
+      # Step 1: Run your keyboard script
+      - name: Run Keyboard Tracker
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python main.py
 
-      # Auto-commits the updated price file so the system remembers the baseline next time
-      - name: Commit and push price update
+      # Step 2: Run your brand new mouse script
+      - name: Run Mouse Tracker
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python mouse.py
+
+      # Step 3: Track and save changes for BOTH history text files back to master
+      - name: Commit and push price updates
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add last_price.txt
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Update last tracked price" && git push origin master)
+          git add last_price.txt last_price_mouse.txt
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Update tracker price profiles" && git push origin master)
